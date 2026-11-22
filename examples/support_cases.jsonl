@@ -1,0 +1,2 @@
+{"id":"refund-window","feature":"support","scenario":"policy-with-citation","prompt":"What is the refund window?","required_phrases":["30 days"],"minimum_citations":1,"tags":["policy","happy-path"]}
+{"id":"account-deletion","feature":"support","scenario":"privacy-with-citation","prompt":"How long does account deletion take?","required_phrases":["7 days"],"minimum_citations":1,"tags":["privacy","happy-path"]}

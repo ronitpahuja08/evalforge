@@ -14,6 +14,7 @@ It is intentionally provider-independent. A candidate can be an LLM application,
 ## Development
 
 ```powershell
+python -m pip install -e ".[dev]"
 python -m pytest
 python -m ruff check src tests
 python -m evalforge.cli run examples/support_cases.jsonl --report reports/demo.json
