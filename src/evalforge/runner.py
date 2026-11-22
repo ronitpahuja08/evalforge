@@ -1,6 +1,7 @@
 """Offline case loading, execution, and reproducible trace reports."""
 
 import json
+from collections import defaultdict
 from collections.abc import Callable, Iterable
 from dataclasses import asdict
 from pathlib import Path
@@ -69,7 +70,7 @@ def run_cases(cases: Iterable[EvaluationCase], candidate: Candidate) -> Evaluati
 def write_report(report: EvaluationReport, path: Path) -> None:
     """Write a stable JSON artifact suitable for a CI upload or later comparison."""
     payload = {
-        "summary": {"total": report.total, "passed": report.passed, "pass_rate": report.pass_rate},
+        "summary": summarize_report(report),
         "traces": [
             {
                 "case_id": trace.case_id,
@@ -90,6 +91,25 @@ def write_report(report: EvaluationReport, path: Path) -> None:
     }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def summarize_report(report: EvaluationReport) -> dict[str, object]:
+    """Aggregate outcomes by feature and assertion for regression tracking."""
+    feature_totals: dict[str, dict[str, int]] = defaultdict(lambda: {"total": 0, "passed": 0})
+    assertion_totals: dict[str, dict[str, int]] = defaultdict(lambda: {"total": 0, "passed": 0})
+    for trace in report.traces:
+        feature_totals[trace.feature]["total"] += 1
+        feature_totals[trace.feature]["passed"] += int(trace.passed)
+        for result in trace.assertions:
+            assertion_totals[result.code]["total"] += 1
+            assertion_totals[result.code]["passed"] += int(result.outcome == "pass")
+    return {
+        "total": report.total,
+        "passed": report.passed,
+        "pass_rate": report.pass_rate,
+        "by_feature": dict(feature_totals),
+        "by_assertion": dict(assertion_totals),
+    }
 
 
 def _string(raw: dict[str, Any], field: str, line_number: int) -> str:
