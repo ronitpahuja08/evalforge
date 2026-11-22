@@ -22,6 +22,12 @@ python -m evalforge.cli run examples/support_cases.jsonl --report reports/demo.j
 
 The [implementation plan](tasks/plan.md) describes the next five days: dataset coverage, human review, model-judge calibration, CI regression gates, and experiment readiness.
 
+## Report artifacts
+
+Each run produces JSON with an overall pass rate plus breakdowns by feature and assertion. Every trace retains the candidate version, response, citations, assertion outcomes, duration, and timestamp. That makes failures inspectable instead of collapsing them into one opaque score.
+
+The included `support_cases.jsonl` is deliberately small but representative: each case carries the feature, scenario, success phrases, citation requirement, and tags that future coverage checks will use.
+
 ## Principles
 
 1. Make success criteria specific to the user task.

@@ -1,6 +1,6 @@
 # EvalForge Task List
 
-- [ ] Today: Build deterministic evaluation foundation and offline demo.
+- [x] Today: Build deterministic evaluation foundation and offline demo.
 - [ ] Day 2: Add datasets, tags, coverage, and regression baselines.
 - [ ] Day 3: Add trace inspection and human-review workflow.
 - [ ] Day 4: Add model-judge and RAG evaluation adapters.
