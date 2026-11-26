@@ -26,6 +26,8 @@ def load_cases(path: Path) -> tuple[EvaluationCase, ...]:
         except json.JSONDecodeError as error:
             msg = f"invalid JSON on line {line_number}"
             raise ValueError(msg) from error
+        if not isinstance(raw, dict):
+            raise ValueError(f"case must be a JSON object on line {line_number}")
         case = EvaluationCase(
             id=_string(raw, "id", line_number),
             feature=_string(raw, "feature", line_number),
@@ -43,6 +45,8 @@ def load_cases(path: Path) -> tuple[EvaluationCase, ...]:
             raise ValueError(f"duplicate case ID: {case.id}")
         seen_ids.add(case.id)
         cases.append(case)
+    if not cases:
+        raise ValueError("evaluation suite must contain at least one case")
     return tuple(cases)
 
 

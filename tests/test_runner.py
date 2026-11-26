@@ -45,6 +45,14 @@ def test_loader_rejects_duplicate_identifiers(tmp_path) -> None:
         load_cases(source)
 
 
+@pytest.mark.parametrize("contents", ["", "\n", "[]\n", "null\n"])
+def test_loader_rejects_empty_suites_and_non_object_cases(tmp_path, contents: str) -> None:
+    source = tmp_path / "cases.jsonl"
+    source.write_text(contents, encoding="utf-8")
+    with pytest.raises(ValueError):
+        load_cases(source)
+
+
 def test_summary_tracks_feature_and_assertion_success_rates(tmp_path) -> None:
     source = tmp_path / "cases.jsonl"
     source.write_text(
